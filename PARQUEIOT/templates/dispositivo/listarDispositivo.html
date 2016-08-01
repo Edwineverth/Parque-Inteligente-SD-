@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="responsive-side-navigation-layout" class="section">
+        <h4 class="header">LISTADOR DE DISPOSITIVOS</h4>
+        <button type="button" class="btn btn-success btn-sm" onclick="ingresarP()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> INGRESAR</button>
+        <div id="divTabla" class="table-responsive">
+        <table id = "tblTabla" class="table table-hover">
+        <thead>
+        <tr>
+            <td class="success">#</td>
+            <td class="success">NOMBRE</td>
+            <td class="success">MAC</td>
+            <td class="success">FABRICANTE</td>
+            <td class="success">------</td>
+            <td class="success">------</td>
+        </tr>
+        </thead>
+        <tbody >
+            <!-- Aplicadas en las celdas (<td> o <th>) -->
+            {% for dispo in dispositivo %}
+                    <tr>
+                    <td >{{dispo.id}}</td>
+                    <td >{{dispo.dis_nombre}}</td>
+                    <td >{{dispo.dis_mac}}</td>
+                    <td >{{dispo.dis_fabricante}}</td>
+
+                    <td ><button class='btn btn-success' id="btnupdate{{dispo.id}}" value="{{dispo.id}}" onclick='actualizarDatos({{dispo.id}})'><span class="mdi-action-autorenew"></i></button></td>
+                    <td ><button class='btn btn-success' id="btndelete" value="{{dispo.id}}" onclick='eliminarDatos({{dispo.id}})'><span class="mdi-action-delete"></i></button></td>
+                </tr>
+        	{% endfor %}
+        </tbody>
+        
+        </table>
+    </div>
+
+
+ {% endblock content %}
+ {% block js %}
+	
+<script>
+	function actualizarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/dispositivo/editar/"+r+"'"+"",10);
+
+	}
+	function eliminarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/dispositivo/eliminar/"+r+"'"+"",10);
+
+	}
+	function ingresarP(){
+
+		setTimeout("location.href='/dispositivo/registrar'",10)
+	}
+
+
+	</script>	
+{% endblock js %}

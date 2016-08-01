@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="responsive-side-navigation-layout" class="section">
+        <h4 class="header">LISTADOR DE SENSOR</h4>
+        <button type="button" class="btn btn-success btn-sm" onclick="ingresarP()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> INGRESAR</button>
+        <div id="divTabla" class="table-responsive">
+        <table id = "tblTabla" class="table table-hover">
+        <thead>
+        <tr>
+            <td class="success">#</td>
+            <td class="success">NOMBRE</td>
+            <td class="success">Unidad de Medida</td>
+            <td class="success">Dispositivo</td>
+            <td class="success">------</td>
+            <td class="success">------</td>
+        </tr>
+        </thead>
+        <tbody >
+            <!-- Aplicadas en las celdas (<td> o <th>) -->
+            {% for sen in sensor %}
+                    <tr>
+                    <td >{{sen.id}}</td>
+                    <td >{{sen.sen_nombre}}</td>
+                    <td >{{sen.sen_unidad_medida}}</td>
+                    {% for dis in dispositivo %}
+                        {% if dis.id == sen.id_dis_id %}
+                            <td >{{dis.dis_nombre}}</td>
+                        {% endif %}
+
+                    {% endfor %}
+                   
+
+                    <td ><button class='btn btn-success' id="btnupdate{{sen.id}}" value="{{sen.id}}" onclick='actualizarDatos({{sen.id}})'><span class="mdi-action-autorenew"></i></button></td>
+                    <td ><button class='btn btn-success' id="btndelete" value="{{sen.id}}" onclick='eliminarDatos({{sen.id}})'><span class="mdi-action-delete"></i></button></td>
+                </tr>
+        	{% endfor %}
+        </tbody>
+        
+        </table>
+    </div>
+
+
+ {% endblock content %}
+ {% block js %}
+	
+<script>
+	function actualizarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/sensor/editar/"+r+"'"+"",10);
+
+	}
+	function eliminarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/sensor/eliminar/"+r+"'"+"",10);
+
+	}
+	function ingresarP(){
+
+		setTimeout("location.href='/sensor/registrar'",10)
+	}
+
+
+	</script>	
+{% endblock js %}

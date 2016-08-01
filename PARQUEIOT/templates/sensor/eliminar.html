@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="responsive-side-navigation-layout" class="section">
+		<div class="alert alert-success" role="alert">
+			<h1>ELIMINAR SENSOR</h1>
+		</div>
+
+	<Form  action = ""  method = "post" > {%  csrf_token  %} 
+    <p> ¿Seguro que quieres eliminar " {{  sensor  }} "? </p> 
+    
+    <button type="submit" class="btn btn-primary">CONFIRMAR</button>
+	</form>
+
+{% endblock content %}

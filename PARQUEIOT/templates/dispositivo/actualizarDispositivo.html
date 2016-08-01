@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="responsive-side-navigation-layout" class="section">
+		<div class="alert alert-success" role="alert">
+			<h1>ACTUALIZAR DISPOSITIVO</h1>
+		</div>
+
+
+	<div class="well col-md-offset-2 col-md-7">
+	    <form method="post">
+	    {% load bootstrap3 %}
+	    <div id="form">
+	        {% csrf_token %}
+		    {% bootstrap_form form %}
+		    <!--<ul   > 
+		        <li  Identificación = "sujeto"  clase = "contacto" > {{form.cli_cedula}} </li> 
+		        
+	    	</ul> 
+		    -->
+		    <button type="submit" class="btn btn-primary">GUARDAR</button>
+		</form>
+	</div>
+ </div>
+
+{% endblock content %}

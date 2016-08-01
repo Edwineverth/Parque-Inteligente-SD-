@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="responsive-side-navigation-layout" class="section">
+        <h4 class="header">DISPOSITIVO</h4>
+        	 <input placeholder="Placeholder" id="dispo_nombre" type="text" class="validate">
+        	 <input placeholder="Placeholder" id="dispo_mac" type="text" class="validate">
+        	 <input placeholder="Placeholder" id="dispo_fabricante" type="text" class="validate">
+        <h4 class="header">SENSOR</h4>
+        	<input placeholder="Placeholder" id="sensor_nombre" type="text" class="validate">
+        	<input placeholder="Placeholder" id="sensor_mac" type="text" class="validate">
+        <button type="button" onclick="addfilastabla()" class="btn btn-primary">AGREGAR</button>
+
+
+
+           <div class="table-responsive">
+			   <table id="tablafactura"  class="table table-hover">
+			   <thead>
+			   	<tr>
+			    	
+			        <td class="success">NOMBRE</td>
+			        <td class="success">UNIDAD DE MEDIDA</td>
+			        		        
+			    </tr>
+			   </thead>
+			   <tbody >
+			   </tbody>
+			   </table>
+  
+   		</div>
+   		<button type="button" class="btn btn-primary" id="btnGuardar" onclick="guardardatos()">GUARDAR</button>
+        
+    </div>
+
+
+ {% endblock content %}
+ {% block js %}
+	
+<script>
+	function actualizarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/dispositivo/editar/"+r+"'"+"",10);
+
+	}
+	function eliminarDatos(r){
+		var s = document.getElementById('btnupdate'+r).value
+		setTimeout("location.href='/dispositivo/eliminar/"+r+"'"+"",10);
+
+	}
+	function ingresarP(){
+
+		setTimeout("location.href='/dispositivo/registrar'",10)
+	}
+
+	function addfilastabla(){
+			var sensor_nombre = document.getElementById("sensor_nombre").value;
+			var sensor_mac = document.getElementById("sensor_mac").value;
+
+			var tabla = document.getElementById('tablafactura');
+			var lastRow= tabla.rows.length;
+			var row = tabla.insertRow(lastRow);
+	      	var lp= 0
+			//////////////////////////////////////////////////////////////////					
+			var sen_nombre =row.insertCell(0);
+			var sen_mac =row.insertCell(1);
+			var eliminar=row.insertCell(2);
+
+			sen_nombre.innerHTML = sensor_nombre;
+			sen_mac.innerHTML=sensor_mac;
+			eliminar.innerHTML="<button class='btn btn-danger' onclick='eliminarfilas(this)'>DELL</i></button>";
+			return false;
+	}
+
+	function eliminarfilas(t){
+      var td = t.parentNode;
+      var tr = td.parentNode;
+      var table = tr.parentNode;
+      table.removeChild(tr)
+      
+
+    }
+
+
+
+    
+
+
+    function guardardatos () {
+    	console.log('cuca');
+		var tabla = document.getElementById('tablafactura');
+		var array = [];
+		var dispo_nombre  =  document.getElementById('dispo_nombre').value;
+		var dispo_mac = document.getElementById('dispo_mac').value;
+		var dispo_fabricante = document.getElementById('dispo_fabricante').value;
+		var datos = {
+		  'sensor': [],
+		  'dispositivo': []
+		};
+		datos.dispositivo.push({'dispo_nom':dispo_nombre,'dispo_mac':dispo_mac,'dispo_fabricante':dispo_fabricante});
+
+		if (tabla.rows.length >1){
+				
+			for (var i = 1; tabla.rows[i];i++){
+				var sen_nombre = document.getElementById("tablafactura").rows[i].cells[0];
+				var sen_mac = document.getElementById("tablafactura").rows[i].cells[1];
+				datos.sensor.push({'sensor_nombre':sen_nombre.innerHTML,'sensor_mac':sen_mac.innerHTML});
+			}
+			localStorage.setItem('datos', JSON.stringify(datos));
+			var restoredSession = JSON.parse(localStorage.getItem('datos'));
+			console.log(restoredSession);
+			$.ajax({
+				beforeSend: function () {
+					console.log('cargando')
+				},
+				url:'/dispositivo/ajax/',
+				type:'get',
+				data: {'objetos':JSON.stringify(datos),'csrfmiddlewaretoken': '{{ csrf_token }}'},
+				success:function(data){
+					if(data['result'] == "OK"){
+				        console.log("¡Registro de dispositivo  guardado correctamente!")
+				    }else{
+				    	 console.log("¡Error en la transacción!")
+				    }
+				}, 
+
+
+			});
+
+
+		}else{
+			console.log('No existen datos en la tabla')
+		}
+   	
+    }
+	</script>	
+{% endblock js %}
