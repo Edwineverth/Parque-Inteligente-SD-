@@ -1,0 +1,63 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section id="content">
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+            <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center">
+                <h4 class="title">INGRESO DE DISPOSITIVOS</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <br>
+    <section id="">
+
+        <div class="container">
+            <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="{% url 'AdmDispositivos' %}">Ver Dispositivos</a>
+            </div>
+        </div>
+	</section>
+    <section>
+        <div class="container">
+            <div class="">
+                <div class="">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <div class="row valign">
+                            <div class="col s12 m8 offset-m2 l8 offset-l2">
+                                <div class="">
+                                    <div class="">
+                                        <form action="" class="form-control" method="post">{% csrf_token %}
+                                            <label>Nombre:</label>
+                                            {{ form.disp_nombre }}
+                                            <label>MAC:</label>
+                                            {{ form.disp_mac }}
+                                            <div hidden="hidden">
+                                                {{ form.disp_estado }}
+                                            </div>
+                                            <label>Paque:</label>
+                                            {{ form.parque }}
+                                            <button type="submit" name="submit" class="btn cyan waves-effect waves-light right" value="Agregar Dispositivo">
+                                                AGREGAR
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock content %}

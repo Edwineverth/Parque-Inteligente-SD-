@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load staticfiles %}
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Registro</title>
+	<!--<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>-->
+	<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/styleLogin.css" %}">
+</head>
+<body>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="well panel panel-default" style="margin-top: 1%">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3" style="border: 1px solid #ccc; padding: 10px 35px 40px 35px; background-color: #FFF;">
+                                    <form id="frmRegistro" name="frmRegistro" class="form-horizontal" action="" method="post" >{% csrf_token %}
+                                        <!--*************************FORMULARIO*************************** -->
+                                        <fieldset class="scheduler-border">
+                                            <legend class="center-align"><div class="center-align">SmartPark</div></legend>
+                                            <div class="form-group">
+                                                <label for="txtName">Parque:</label>
+                                                <input type="text" required="true" class="form-control" id="txtNombrePark" name="txtNombrePark" placeholder="Ingrese el nomrbe" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="txtName">Dispositivo:</label>
+                                                <input type="text" required="true" class="form-control" id="txtNombreDisp" name="txtNombreDisp" placeholder="Ingrese el Nombre"/>
+                                              </div>
+                                            <div class="form-group">
+                                                <label for="txtName">MAC:</label>
+                                                <input type="text" required="true" class="form-control" id="txtMacDisp" name="txtMacDisp" placeholder="Ingrese la MAC del dispositivo"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="txtName">Sensor:</label>
+                                                <input type="text" required="true" class="form-control" id="txtNombreSen" name="txtNombreSen" placeholder="Ingrese el Nombre"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="txtName">Tipo:</label>
+                                                <input type="text"  class="form-control" id="txtTipoSen" name="txtTipoSen" placeholder="Ingrese el tipo de sensor" />
+                                            </div>
+                                        </fieldset>
+                                        <!-- ************* BOTONES ***************-->
+                                        <div class="row">
+                                            <div align="center">
+                                                <button id="btnEnviar" name="btnEnviar" type="submit" class="btn btn-primary btn-large">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

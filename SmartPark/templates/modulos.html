@@ -1,0 +1,17 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <br>
+    <br>
+    <div class="col s3 m3 l3" align="center">
+        <a  href="{% url 'Luz' %}" >   <img  src="{% static "img/Luz.jpg" %}" title="LUZ"  class="circle responsive-img valign profile-image center"> </a>
+        <img src="{% static "img/sepa.png" %}">
+        <a href="{% url 'Riego' %}">  <img src="{% static "img/Riego3.jpg" %}" title="RIEGO" class="circle responsive-img valign profile-image"> </a>
+        <img src="{% static "img/sepa.png" %}">
+    </div>
+    <br>
+    <div class="col s3 m3 l3" align="center">
+        <a href="{% url 'Sonido' %}">  <img  align="rigth" src="{% static "img/Sonid.jpg" %}" title="SONIDO" class="circle responsive-img valign profile-image"> </a>
+        <a  href="#" >   <img  src="{% static "img/Visua.jpg" %}" title="PANTALLA"  class="circle responsive-img valign profile-image center"> </a>
+    </div>
+{% endblock content %}

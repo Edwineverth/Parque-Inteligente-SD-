@@ -1,0 +1,233 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <section id="content">
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+            <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center">
+                <h3 class="title">DISPOSITIVOS</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <br>
+    <section id="">
+        <div class="container">
+            <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="{% url 'NuevoDispositivo' %}">Nuevo Dispositivo</a>
+            </div>
+        </div>
+	</section>
+
+    <section>
+    <div class="divider"></div>
+        <div class="center-on-small-only">
+            <div class="center-block">
+                <div id="table-datatables" >
+                    <div class="row">
+                        <div class="col s2 m4 l2" style="color: white">
+                            <p>asdasdasdasdsad
+                            sdasdasdasdasdsadsa
+                            asdsadsadasdasd
+                            asdasdsad</p>
+                        </div>
+
+                        <div class="col s10 m8 19">
+                            <table id="data-table-simple" class="responsive-table display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="center-align">ID</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">MAC</th>
+                                        <th class="center-align">Estado</th>
+                                        <th class="center-align">Parque</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="center-align">ID</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">MAC</th>
+                                        <th class="center-align">Estado</th>
+                                        <th class="center-align">Parque</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                     </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for d in dispositivos %}
+                                        <tr>
+                                            <td class="center-align">{{ d.id }}</td>
+                                            <td class="center-align">{{ d.disp_nombre }}</td>
+                                            <td class="center-align">{{ d.disp_mac }}</td>
+                                            <td class="center-align">{{ d.disp_estado }}</td>
+                                            <td class="center-align">{{ d.parque }}</td>
+                                            <td class="center-align">
+                                                <button style='border: 0; background: transparent' data-target='' class="" data-toggle='' onclick="window.location='{% url 'ActualizarDispositivo' pk=d.id %}'">
+                                                    <img src="{% static "img/edit.png" %}" title='Editar'>
+                                                </button>
+                                                {% if d.disp_estado == 'a' %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location='{% url 'DesactivarDispositivo' d.id %}'">
+                                                        <img src="{% static "img/desabilitar.png" %}" title='Desabilitar'>
+                                                    </button>
+                                                {% else %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location='{% url 'ActivarDispositivo' d.id %}'">
+                                                        <img src="{% static "img/habilitar.png" %}" title='Habilitar'>
+                                                    </button>
+                                                {% endif %}
+                                                
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="divider"></div>
+    </section>
+
+
+
+
+    <!-- Modal Actualizar Dispositivo -->
+    <div id="myModalEdit" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Actualizar de Dispositivo</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formActDisp" method="post" action="" class="form-group">{% csrf_token %}
+                    <input type="hidden" id="txtId2" name="txtId2">
+                    <div id="alert" style="display:none;" class="alert alert-danger"></div>
+                    <label >Nombre:</label>
+                    <input type="text" class="form-control" placeholder="Nombre" name="txtNombre2" id="txtNombre2" required="true">
+                    <label >MAC:</label>
+                    <input type="text" class="form-control" placeholder="MAC" name="txtMac2" id="txtMac2" required="true">
+                    <label>Estado</label>
+                    <select id="selectEstado2" name="selectEstado2">
+                        <option value="a">Activo</option>
+                        <option value="i">Inactivo</option>
+                    </select>
+                    <div class="col s12 m8 l9">
+                        <label>Parque</label>
+                        <div class="input-field col s12">
+                            <select id="selectParque2" name="selectParque2">
+                                <option value="" disabled selected>Escoja el parque</option>
+                                {% for p in parques %}
+                                <option value="{{ p.id }}">{{ p.parq_nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+            <a href="#" type="button" id="btnModalActualizar" class="btn-flat waves-effect waves-green  ">Actualizar</a>
+        </div>
+    </div>
+
+    <!--<script>
+        function validarFormulario(){
+            document.getElementById("formAggDisp").onsubmit=function(){
+
+                var v1 = document.getElementById("txtNombre").value;
+                var v2 = document.getElementById("txtMac").value;
+                var v3 = document.getElementById("selectParque").value;
+
+
+                if( v1 == null || v1.length == 0 || /^\s+$/.test(v1) || v2 == null || v2.length == 0 || /^\s+$/.test(v2) || v3 == null || v3.length == 0 || /^\s+$/.test(v3) ) {
+                    var box = bootbox.alert("Todos los datos son obligatorios");
+                                    box.find('.modal-content').css({ color: '#0000', 'font-size': '1.5em'});
+                                    box.find('.btn-primary').css({'background-color': '#33CF64','border': '#33CF64 1px solid'});
+                    return false;
+
+                }
+            }
+            function borrarFormulario(){
+                document.getElementById("formAggDisp").onsubmit=function(){
+                    return true;
+                }
+            }
+        }
+
+        function dispositivo(id){
+            var box = bootbox.dialog({
+                        title: "Dispositivo",
+                        message: '<div id="resultado"> ' +
+                        '</div> '
+                    }
+            );
+            box.find('.modal-content').css({ color: '#0000',width:'150%'});
+            $.ajax({
+                data: {"codigo" : id},
+                type: "GET",
+                url: '{% url 'AdmDispositivos' %}',
+                success: function(data){
+                    $("#resultado").html(data);
+                }
+            });
+        }
+    </script>-->
+    <!--<script>
+        $(function () {
+            
+            $.editarModal = function(td)
+            {
+                var trChildren 	= $(td).parent().children();
+                var id          = trChildren[0].textContent;
+                var nom         = trChildren[1].textContent;
+                var mac         = trChildren[2].textContent;
+                var est         = trChildren[3].textContent;
+                var emp         = trChildren[4].textContent;
+                //var tip_user  = $(td).parent().attr('data-tipcod');
+                $('#txtId2').val(id)
+                $('#txtNombre2').val(nom);
+                $('#txtMac2').val(mac);
+                $('#selectEstado2').val(est)
+                $('#selectParque2').val(emp);
+            };
+
+            $('#btnModalActualizar').click(function(){
+                
+                //event.preventDefault();
+                $.ajax({
+                    url: '',
+                    dataType:'json',
+                    type: "POST",
+                    data: {
+                            'id':$('#txtId2').val(),
+                            'nombre':$('#txtNombre2').val(), 
+                            'mac':$('#txtMax2').val(), 
+                            'est':$('#selectEstado2').val(),
+                            'parque': $('#selectParque2').val(),
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                             
+                            },
+                    success: function(response){
+                        $('#myModalEdit').modal('hide');
+                        alert("Exito");
+                        //$.notify("Dispositivo editado con exito","success");
+                        $('#data-table-simple').DataTable().ajax.reload();
+                    },
+                    error: function(response){
+                        alert("Error");
+                        //$.notify("Error al editar","error");
+                    }
+                });
+            });
+
+        });
+    </script>-->
+ 
+{% endblock content %}

@@ -1,0 +1,136 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+    <section id="content">
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+            <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center">
+                <h3 class="title">PARQUES</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <br>
+    <section id="">
+        <div class="container">
+            <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="{% url 'NuevoParque' %}">Nuevo Parque</a>
+            </div>
+        </div>
+	</section>
+
+    <section>
+    <div class="divider"></div>
+        <div class="center-on-small-only">
+            <div class="center-block">
+                <div id="table-datatables" >
+                    <div class="row">
+                        <div class="col s2 m4 l2" style="color: white">
+                            <p>asdasdasdasdsad
+                            sdasdasdasdasdsadsa
+                            asdsadsadasdasd
+                            asdasdsad</p>
+                        </div>
+
+                        <div class="col s10 m8 19">
+                            <table id="data-table-simple" class="responsive-table display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="center-align">ID</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">Estado</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="center-align">ID</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">Estado</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                     </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for p in parques %}
+                                        <tr>
+                                            <td class="center-align">{{ p.id }}</td>
+                                            <td class="center-align">{{ p.parq_nombre }}</td>
+                                            <td class="center-align">{{ p.parq_estado }}</td>
+                                            <td class="center-align">
+                                                <button style='border: 0; background: transparent' data-target='' class="" data-toggle='' onclick="window.location='{% url 'EditarParque' p.id %}'">
+                                                    <img src="{% static "img/edit.png" %}" title='Editar'>
+                                                </button>
+                                                {% if p.parq_estado == 'a' %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location='{% url 'DesactivarParque' p.id %}'">
+                                                        <img src="{% static "img/desabilitar.png" %}" title='Desabilitar'>
+                                                    </button>
+                                                {% else %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location='{% url 'ActivarParque' p.id %}'">
+                                                        <img src="{% static "img/habilitar.png" %}" title='Habilitar'>
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="divider"></div>
+    </section>
+
+
+    <!--<script>
+        function validarFormulario(){
+            document.getElementById("formAggDisp").onsubmit=function(){
+
+                var v1 = document.getElementById("txtNombre").value;
+                var v2 = document.getElementById("txtMac").value;
+                var v3 = document.getElementById("selectParque").value;
+
+
+                if( v1 == null || v1.length == 0 || /^\s+$/.test(v1) || v2 == null || v2.length == 0 || /^\s+$/.test(v2) || v3 == null || v3.length == 0 || /^\s+$/.test(v3) ) {
+                    var box = bootbox.alert("Todos los datos son obligatorios");
+                                    box.find('.modal-content').css({ color: '#0000', 'font-size': '1.5em'});
+                                    box.find('.btn-primary').css({'background-color': '#33CF64','border': '#33CF64 1px solid'});
+                    return false;
+
+                }
+            }
+            function borrarFormulario(){
+                document.getElementById("formAggDisp").onsubmit=function(){
+                    return true;
+                }
+            }
+        }
+
+        function dispositivo(id){
+            var box = bootbox.dialog({
+                        title: "Dispositivo",
+                        message: '<div id="resultado"> ' +
+                        '</div> '
+                    }
+            );
+            box.find('.modal-content').css({ color: '#0000',width:'150%'});
+            $.ajax({
+                data: {"codigo" : id},
+                type: "GET",
+                url: '{% url 'AdmDispositivos' %}',
+                success: function(data){
+                    $("#resultado").html(data);
+                }
+            });
+        }
+    </script>-->
+    
+ 
+{% endblock content %}

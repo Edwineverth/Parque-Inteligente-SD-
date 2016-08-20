@@ -1,0 +1,74 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section id="content">
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+            <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center">
+                <h4 class="title">ACTUALIZAR SENSOR</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <br>
+    <section id="">
+
+        <div class="container">
+            <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="{% url 'AdmSensores' %}">Ver Sensores</a>
+            </div>
+        </div>
+	</section>
+    <section>
+        <div class="container">
+            <div class="">
+                <div class="">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <div class="row valign">
+                            <div class="col s12 m8 offset-m2 l8 offset-l2">
+                                <div class="">
+                                    <div class="">
+                                        <form action="" class="form-control" method="post">{% csrf_token %}
+                                            {{ form.as_p }}
+                                            <!--<div hidden="hidden">
+                                                <label>ID:</label>
+                                                <input type="text" placeholder="" id="txtId" name="txtId" required="true" value="{{ sensor.id }}">
+                                            </div>
+                                            <label>Nombre:</label>
+                                            <input type="text" placeholder="" id="txtNombre" name="txtNombre" required="true" value="{{ sensor.sen_nombre }}">
+                                            <label>Unidad de Medida:</label>
+                                            <input type="text" placeholder="" id="txtUM" name="txtUM" required="true" value="{{ sensor.sen_unidadmedida }}">
+                                            <label>Localizacion:</label>
+                                            <input type="text" placeholder="" id="txtLocalizacion" name="txtLocalizacion" required="true" value="{{ sensor.sen_localizacion }}">
+                                            <label>Tipo:</label>
+                                            <input type="text" placeholder="" id="txtTipo" name="txtTipo" required="true" value="{{ sensor.sen_tipo }}">
+                                            <label>Dispositivo:</label>
+                                            <select id="selecDispositivo" name="selectDispositivo" value="{{ sensor.dispositivo }}">
+                                                <option value="" disabled selected>Escoja el dispositivo</option>
+                                                {% for d in dispositivos %}
+                                                <option value="{{ d.id }}">{{ d.disp_nombre }}</option>
+                                                {% endfor %}
+                                            </select>-->
+                                            <button type="submit" name="submit" class="btn cyan waves-effect waves-light right" value="Agregar Usuario">
+                                                ACTUALIZAR
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+{% endblock content %}

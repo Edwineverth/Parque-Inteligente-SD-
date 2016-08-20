@@ -1,0 +1,160 @@
+{%  extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section id="content">
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+            <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12 center">
+                    <h3 class="title">USUARIOS</h3>
+                </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <br>
+    <section id="">
+
+        <div class="container">
+            <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="{% url 'CrearUsuario2' %}">Nuevo Usuario</a>
+            </div>
+        </div>
+	</section>
+
+    <section>
+    <div class="divider"></div>
+        <div class="center-on-small-only">
+            <div class="center-block">
+                <div id="table-datatables" >
+                    <div class="row">
+                        <div class="col s2 m4 l1" style="color: white">
+                            <p>asdasdasdasdsad
+                            sdasdasdasdasdsadsa
+                            asdsadsadasdasd
+                            asdasdsad</p>
+                        </div>
+                        <div class="col s10 m8 l11">
+                            <table id="data-table-simple" class="responsive-table display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th hidden="hidden">ID</th>
+                                        <th class="center-align">Usuario</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">Apellido</th>
+                                        <th class="center-align">Email</th>
+                                        <th hidden="hidden">Password</th>
+                                        <th class="center-align">Super Usuario</th>
+                                        <th class="center-align">Telefono</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th hidden="hidden">ID</th>
+                                        <th class="center-align">Usuario</th>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">Apellido</th>
+                                        <th class="center-align">Email</th>
+                                        <th  hidden="hidden">Password</th>
+                                        <th class="center-align">Super Usuario</th>
+                                        <th class="center-align">Telefono</th>
+                                        <th class="center-align" colspan="">Accion</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for u in usuarios %}
+                                        <tr>
+                                            <td hidden="hidden">{{ u.id }}</td>
+                                            <td class="center-align">{{ u.username }}</td>
+                                            <td class="center-align">{{ u.first_name }}</td>
+                                            <td class="center-align">{{ u.last_name }}</td>
+                                            <td class="center-align">{{ u.email }}</td>
+                                            <td hidden="hidden">{{ u.password }}</td>
+                                            <td class="center-align">
+                                                {% if u.is_superuser == True %}
+                                                    <button type='button' class='btn-floating waves-effect waves-light red ' onclick="window.location.href='{% url 'DesactivarSuperuser' u.id %}'" id='btnDesactivar' title="Desactivar">
+                                                        <i class="mdi-content-remove"></i>
+                                                    </button>
+                                                {% else %}
+                                                    <button type='button' class='btn-floating waves-effect waves-light green accent-3' onclick="window.location.href='{% url 'ActivarSuperuser' u.id %}'" id='btnActivar' title="Activar">
+                                                        <i class="mdi-action-done"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                            <td class="center-align">
+                                                {% for p in perfil %}
+                                                    {% if u.id == p.usuario_id %}
+                                                        {{ p.telefono }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td class="center-align">
+                                                <button style='border: 0; background: transparent' data-target='myModalEdit' class="" data-toggle='modal' onclick="window.location.href='{% url 'EditarUsuario' u.id %}'">
+                                                    <img src="{% static "img/edit.png" %}" title='Editar'>
+                                                </button>
+                                                {% if u.is_active == True %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location.href='{% url 'DesabilitarUser' u.id %}'" title="Desabilitar">
+                                                        <!--<img src="{% static "img/delete.png" %}" title='Desactivar'>-->
+                                                        <i class="mdi-content-remove"></i>
+                                                    </button>
+                                                {% else %}
+                                                    <button style='border: 0; background: transparent' onclick="window.location.href='{% url 'HabilitarUser' u.id %}'" title="Habilitar">
+                                                        <!--<img src="{% static "img/delete.png" %}" title='Desactivar'>-->
+                                                        <i class="mdi-action-assignment-turned-in"></i>
+                                                    </button>
+                                                {% endif %}
+                                                
+                                                <button style='border: 0; background: transparent' title="Eliminar" onclick="window.location.href='{% url 'EliminarUsuario' u.id %}'" >
+                                                    <!--<img src="{% static "img/delete.png" %}" title='Desactivar'>-->
+                                                    <i class="mdi-content-clear"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="divider"></div>
+    </section>
+
+    <!-- Modal Actualizar usuario -->
+    <div id="myModalEdit" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Actualizar de Usuario</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formActDisp" method="post" action="" class="form-group">{% csrf_token %}
+                    <input type="hidden" id="txtId2">
+                    <div id="alert" style="display:none;" class="alert alert-danger"></div>
+                    <label >Nombre:</label>
+                    <input type="text" class="form-control" placeholder="Nombre" name="txtNombre2" id="txtNombre2" required="true">
+                    <label >Tipo:</label>
+                    <input type="text" class="form-control" placeholder="Tipo" name="txtTipo2" id="txtTipo2" required="true">
+                    <div class="col s12 m8 l9">
+                        <label>Dispositivo</label>
+                        <div class="input-field col s12">
+                            <select id="selectDispositivo" name="selectDispositivo">
+                                <option value="" disabled selected>Escoja el dispositivo</option>
+                                {% for d in dispositivos %}
+                                <option value="{{ d.id }}">{{ d.disp_nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+            <a href="#" class="waves-effect waves-green btn-flat modal-action modal-close">Actualizar</a>
+        </div>
+    </div>
+
+{% endblock content %}
