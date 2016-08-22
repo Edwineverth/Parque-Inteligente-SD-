@@ -22,6 +22,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Imagen',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=300)),
+                ('imagen', models.ImageField(upload_to=b'imagenes/')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Parque',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -57,16 +65,7 @@ class Migration(migrations.Migration):
                 ('sen_unidadmedida', models.CharField(max_length=50)),
                 ('sen_localizacion', models.CharField(max_length=100)),
                 ('sen_estado', models.CharField(default=b'a', max_length=1, choices=[('a', 'Activo'), ('i', 'Inactivo')])),
-                ('sen_funcion', models.CharField(default=b'a', max_length=1, choices=[('e', 'Encendido'), ('a', 'Apagado')])),
                 ('dispositivo', models.ForeignKey(to='AppPrincipal.Dispositivo')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Video',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=300)),
-                ('video', models.FileField(upload_to=b'videos/')),
             ],
         ),
         migrations.AddField(

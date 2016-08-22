@@ -2,13 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import *
-from .form import UserForm, DispositivoForm, DispositivoEditForm, SensorForm, UserForm1, UserForm2, VideoForm, UserEditForm, ParqueForm
+from .form import UserForm, DispositivoForm, DispositivoEditForm, SensorForm, UserForm1, UserForm2, UserEditForm, ParqueForm, ImagenForm
 from django.core import serializers
 from django.core.serializers import json
 from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import render, render_to_response,redirect, get_object_or_404
+from django.shortcuts import render, render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import FormView, UpdateView, TemplateView, DetailView
 from datetime import *
@@ -37,6 +37,7 @@ def principal(request):
 def modulos(request):
     return render_to_response('modulos.html', '', context_instance=RequestContext(request))
 
+@login_required(login_url='/')
 def luz(request):
     return render_to_response('luz.html', '', context_instance=RequestContext(request))
 
@@ -61,29 +62,30 @@ def luzDatos(request):
     mqttc.subscribe(topic,0)
     return render_to_response('luzDatos.html', '', context_instance=RequestContext(request))
 
+@login_required(login_url='/')
 def riego(request):
     return render_to_response('riego.html', '', context_instance=RequestContext(request))
 #@login_required(login_url='/')
 #@csrf_exmpt
+@login_required(login_url='/')
 def sonido(request):
     return render_to_response('sonido.html', '', context_instance=RequestContext(request))
 
+@login_required(login_url='/')
 def pantalla(request):
-    return render_to_response('pantalla.html', '', context_instance=RequestContext(request))
+    imagenes = Imagen.objects.all()
+    return render_to_response('pantalla.html', {'imagenes':imagenes}, context_instance=RequestContext(request))
 
-def subir_video(request):
-    #codigo alternativo pa probar
-    """mymodel = Mymodel.objects.get(id=1)
-    file_content = ContentFile(request.FILES['video'].read())
-    mymodel.video.save(request.FILES['video'].name, file_content)"""
+@login_required(login_url='/')
+def subir_imagen(request):
     if request.POST:
-        form = VideoForm(request.POST)
+        form = ImagenForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('Pantalla')
     else:
-        form = VideoForm()
-    return render_to_response('subirVideo.html', {'form': form}, context_instance=RequestContext(request))
+        form = ImagenForm()
+    return render_to_response('subirImagen.html', {'form': form}, context_instance=RequestContext(request))
 
 
 
@@ -207,7 +209,7 @@ def desactivar_sensor(request,id):
     sensor.save()
     return redirect('AdmSensores')
 
-#A-----------DMINISTRAR USUARIOS-------------#
+#-----------ADMINISTRAR USUARIOS-------------#
 @login_required(login_url='/')
 def admUsuarios(request):
     usuarios = User.objects.all()
@@ -218,31 +220,45 @@ def admUsuarios(request):
 def editar_usuario(request,id):
     parques=Parque.objects.all()
     usuario=get_object_or_404(User,pk=id)
+    cont={}
+    perfil=""
+    n=False
     try:
-        perfil=get_object_or_404(Perfiles,usuario=usuario)
+        perf=get_object_or_404(Perfiles,usuario=usuario)
+        id_perfil=perf.id
+        perfil=perf
     except Exception, e:
         print(e)
-        perfil=Perfiles()
+        n=True
     cont={'parques':parques,'usuario':usuario,'perfil':perfil}
-    print(perfil.parque)
     if request.method=='POST':
         try:
             with transaction.atomic():
                 print("entro try")
                 usuario = User(id=id,
                                 username=request.POST['txtUsername'],
+                                password=usuario.password,
+                                is_superuser=usuario.is_superuser,
                                 first_name=request.POST['txtFirstname'],
                                 last_name=request.POST['txtLastname'],
                                 email=request.POST['txtEmail'],
+                                is_staff=usuario.is_staff,
+                                is_active=usuario.is_active,
                                 )
-                
-                print(request.POST['txtId'])
-                print(usuario.id)
-                perfil = Perfiles(id=id_perfil,
-                                    usuario=usuario.id,
-                                    parque=request.POST['selectParque'],
-                                    telefono=request.POST['txtTelefono'],
-                                    )
+                parq=Parque.objects.get(pk=request.POST['selectParque'])
+                if n==True:
+                    print("nuevo perfil")
+                    perfil=Perfiles(usuario=usuario,
+                        parque=parq,
+                        telefono=request.POST['txtTelefono']
+                        )
+                else:
+                    print("editar perfil")
+                    perfil = Perfiles(id=id_perfil,
+                                        usuario=usuario,
+                                        parque=parq,
+                                        telefono=request.POST['txtTelefono'],
+                                        )
                 usuario.save()
                 perfil.save()
                 print("listo")

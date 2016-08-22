@@ -27,11 +27,13 @@ router.register(r'usuarios', UserViewSet)
 router.register(r'parques', ParqueViewSet)
 router.register(r'dispositivos', DispositivoViewSet)
 router.register(r'sensores', SensorViewSet)
+router.register(r'registros', RegistroViewSet)
+router.register(r'imagenes', ImagenViewSet)
 
 urlpatterns = patterns('',
                        #url(r'^registro/$', registrar, name='Registrar'),
                        
-                       url(r'^modulos/pantalla/subirvideo/$', subir_video, name='SubirVideo'),
+                       url(r'^modulos/pantalla/subirimagen/$', subir_imagen, name='SubirImagen'),
                        url(r'^modulos/pantalla/$', pantalla, name='Pantalla'),
                        url(r'^modulos/sonido/$', sonido, name='Sonido'),
                        url(r'^modulos/riego/$', riego, name='Riego'),

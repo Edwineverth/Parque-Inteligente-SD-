@@ -21,30 +21,54 @@
         <section id="">
           <div class="container">
               <div class="row">
-                  <a class="waves-effect waves-light btn modal-trigger" href="{% url 'SubirVideo' %}">Subir Nuevo Video</a>
+                  <a class="waves-effect waves-light btn modal-trigger" href="{% url 'SubirImagen' %}">Subir Nueva Imagen</a>
               </div>
           </div>
           <div class="divider"></div>
         </section>
-      
+        
         <section>
-          <div id="container">
-            <div class="row">
-              <div class="col m4 l3">
-                
-              </div>
-              <div class="col s12 m8 l9">
-                <div class="card-panel">
-                  <video width="100%" controls="">
-                    <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
-                  </video>
+          <div class="center-on-small-only">
+            <div class="center-block">
+              <div id="table-datatables">
+                <div class="row">
+                  <div class="col s2 m4 l2" style="color: white; opacity: 0.5">
+                    <p>asdasdasdasdsad
+                    sdasdasdasdasdsadsa
+                    asdsadsadasdasd
+                    asdasdsad</p>
+                  </div>
+                  <div class="col s10 m8 19">
+                    <table id="data-table-simple" class="responsive-table display" cellspacing="0" width="100%">
+                      <thead>
+                          <tr>
+                              <th class="center-align">Titulo</th>
+                              <th class="center-align">Imagen</th>
+                          </tr>
+                      </thead>
+                      <tfoot>
+                          <tr>
+                              <th class="center-align">Titulo</th>
+                              <th class="center-align">Imagen</th>
+                              
+                           </tr>
+                      </tfoot>
+                        <tbody>
+                            {% for img in imagenes %}
+                                <tr>
+                                  <td class="center-align">{{ img.title }}</td>
+                                  <td class="center-align"><img src="/media/{{ img.imagen }}" style="width:25%;height:25%;"></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          
-          
         </section>
+        
 
 
       </div>

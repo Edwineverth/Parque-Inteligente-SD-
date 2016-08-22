@@ -49,7 +49,6 @@ class Sensor(models.Model):
         (u'i', u'Inactivo'),
     )
     sen_estado = models.CharField(max_length=1, choices=EST_CHOICES, default='a')
-    sen_funcion = models.CharField(max_length=1, choices=FUN_CHOICES, default='a')
     dispositivo = models.ForeignKey(Dispositivo)
     def __str__(self):
         return self.sen_nombre
@@ -62,8 +61,8 @@ class Registro(models.Model):
     def __str__(self):
         return self.reg_descripcion
 
-class Video(models.Model):
+class Imagen(models.Model):
     title = models.CharField(max_length=300)
-    video = models.FileField(upload_to='videos/')
+    imagen = models.ImageField(upload_to='imagenes/')
     def __str__():
         return self.title

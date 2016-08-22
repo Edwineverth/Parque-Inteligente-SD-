@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ParqueSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Parque
-		fields = ('id','parq_nombre')
+		fields = ('id','parq_nombre','parq_estado')
 
 class DispositivoSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -31,9 +31,14 @@ class DispositivoSerializer(serializers.ModelSerializer):
 class SensorSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Sensor
-		fields = ('id','sen_nombre','sen_unidadmedida','sen_localizacion','sen_tipo','sen_estado','sen_funcion','dispositivo')
+		fields = ('id','sen_nombre','sen_unidadmedida','sen_localizacion','sen_tipo','sen_estado','dispositivo')
 
 class RegistrosSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Registro
-		fields = ('id','reg_fecha_hora','reg_descripcion','usuario','reg_funcion')	
+		fields = ('id','reg_fecha_hora','reg_descripcion','reg_usuario','reg_funcion')
+
+class ImagenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Imagen
+		fields = ('title','imagen')	

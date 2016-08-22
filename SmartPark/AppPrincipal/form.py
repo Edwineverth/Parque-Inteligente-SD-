@@ -51,7 +51,7 @@ class SensorForm(forms.ModelForm):
       model = Sensor
       fields ='__all__'
 
-class VideoForm(forms.ModelForm):
+class ImagenForm(forms.ModelForm):
   class Meta:
-    model = Video
-    fields= '__all__'
+    model = Imagen
+    fields = '__all__'

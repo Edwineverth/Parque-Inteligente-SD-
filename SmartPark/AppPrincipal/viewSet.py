@@ -33,3 +33,7 @@ class SensorViewSet(viewsets.ModelViewSet):
 class RegistroViewSet(viewsets.ModelViewSet):
 	serializer_class = RegistrosSerializer
 	queryset = Registro.objects.all()
+
+class ImagenViewSet(viewsets.ModelViewSet):
+	serializer_class = ImagenSerializer
+	queryset = Imagen.objects.all()
