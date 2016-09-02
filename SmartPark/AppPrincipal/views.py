@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import *
-from .form import UserForm, DispositivoForm, DispositivoEditForm, SensorForm, UserForm1, UserForm2, UserEditForm, ParqueForm, ImagenForm
+from .form import *
 from django.core import serializers
 from django.core.serializers import json
 from django.core.urlresolvers import reverse_lazy
@@ -11,11 +11,18 @@ from django.http import JsonResponse
 from django.shortcuts import render, render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import FormView, UpdateView, TemplateView, DetailView
+from django.http import HttpResponse
 from datetime import *
 from django.utils import timezone
 import paho.mqtt.client as paho
 from django.conf import settings
 from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
+
+import json
+
+import paho.mqtt.client as mqtt
+import random
+import time
 # Create your views here.
 
 #LOGIN
@@ -79,12 +86,12 @@ def pantalla(request):
 @login_required(login_url='/')
 def subir_imagen(request):
     if request.POST:
-        form = ImagenForm(request.POST, request.FILES)
+        form = PublicidadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('Pantalla')
     else:
-        form = ImagenForm()
+        form = PublicidadForm()
     return render_to_response('subirImagen.html', {'form': form}, context_instance=RequestContext(request))
 
 
@@ -152,7 +159,7 @@ def nuevoDispositivo(request):
 
 class editar_dispositivo(UpdateView):
     model=Dispositivo
-    fields=('disp_nombre','disp_mac','parque')
+    fields=('disp_nombre','disp_mac','dis_idred','parque')
     #form_class=DispositivoEditForm
     template_name='editarDispositivo.html'
     success_url='/administrar/dispositivo/'
@@ -170,6 +177,58 @@ def desactivar_dispositivo(request,id):
     dispositvo.disp_estado='i'
     dispositvo.save()
     return redirect('AdmDispositivos')
+
+#-----------ADMINISTRAR TIPO DE SENSORES-------#
+@login_required(login_url='/')
+def admTipoSensores(request):
+    tipo_sensores = TipoSensor.objects.all()
+    return render_to_response('AdmTipoSensor.html', {'tipo_sensores':tipo_sensores}, context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def nuevoTipoSensor(request):
+    if request.POST:
+        form = TipoSensorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('AdmTipoSensores')
+    else:
+        form = TipoSensorForm()
+    return render_to_response('ingresoTipoSensor.html', {'form': form}, context_instance=RequestContext(request))
+
+class editar_tiposensor(UpdateView):
+    model=TipoSensor
+    fields=('tip_nombre',)
+    template_name='editarTipoSensor.html'
+    success_url='/administrar/tiposensores/'
+
+#-----------ADMINISTRAR TOPICOS-------#
+@login_required(login_url='/')
+def admTopicos(request):
+    topicos = Topico.objects.all()
+    return render_to_response('AdmTopico.html', {'topicos':topicos}, context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def nuevoTopico(request):
+    if request.POST:
+        form = TopicoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('AdmTopicos')
+    else:
+        form = TopicoForm()
+    return render_to_response('ingresoTopico.html', {'form': form}, context_instance=RequestContext(request))
+
+class editar_topico(UpdateView):
+    model = Topico
+    fields=('url','dispositivo')
+    template_name='editarTopico.html'
+    success_url='/administrar/topicos/'
+
+@login_required(login_url='/')
+def eliminar_topico(request,id):
+    topico = Topico.objects.get(id=id)
+    topico.delete()
+    return redirect('AdmTopicos')
 
 #----------ADMINISTRAR SENSORES--------------#
 @login_required(login_url='/')
@@ -290,7 +349,7 @@ def desactivar_superuser(request,id):
 @login_required(login_url='/')
 def habilitar_usuario(request,id):
     user = get_object_or_404(User,pk=id)
-    user.is_active=False
+    user.is_active=True
     user.save()
     return redirect('AdmUsuarios')
 
@@ -362,30 +421,29 @@ def guardar_registro(request):
     email.send()
     print("exito")
 
-#sid = transaction.savepoint()
-#transaction.savepoint_commit(sid)
 
-def registrar(request):
-    if request.method == 'POST':
+class mqttluces(TemplateView):
+    def get(self,request,*args,**kwargs):
+        mensajes_Error = {}
+        datosJson = {}
         try:
-            with transaction.atomic():
-                parque = Parque(parq_nombre=request.POST['txtNombrePark'])
-                parque.save()
-                print(parque.parq_nombre)
-                dispositivo = Dispositivo(parque_id=parque.id,
-                                          disp_nombre=request.POST['txtNombreDisp'],
-                                          disp_mac=request.POST['txtMacDisp'])
-                dispositivo.save()
-                print(dispositivo.disp_nombre)
-                print(dispositivo.disp_mac)
-                sensor = Sensor(dispositivo_id=dispositivo.id,
-                                sen_nombre=request.POST['txtNombreSen'],
-                                sen_tipo=request.POST['txtTipoSen']
-                                )
-                sensor.save()
-                # serializado = json.dumps(["Ha guardado correctamente los datos de "+ "success"])
-                return redirect('Login')
-        except Exception as e:
-            return render_to_response('FormularioRegistrar.html', '', context_instance=RequestContext(request))
-    return render_to_response('FormularioRegistrar.html', '', context_instance=RequestContext(request))
-
+            data = request.GET['objetos']
+            timestamp = int(time.time())
+            broker = '192.168.1.6'
+            port = 1883
+            datosJson = json.loads(data)
+            #*********************MQTT PUBLICADOR******************
+            topic = 'sensor/luminico'
+            message = datosJson['valor']
+            mqttclient = mqtt.Client("mqtt-panel-test", protocol=mqtt.MQTTv311)
+            mqttclient.connect(broker, port=int(port))
+            mqttclient.publish(topic, message)
+            #time.sleep(2)
+            mensajes_Error['message'] = "Se ha publicado un mensaje en el topico SENSOR/luminico"
+            mensajes_Error['result'] = "OK"
+            return HttpResponse(json.dumps(mensajes_Error), content_type="application/json")
+        except Exception as error:
+            print("Error al guardar-->transaccion" + str(error))
+            mensajes_Error['message'] = "Ha ocurrod un error al publicar"
+            mensajes_Error['result'] = "X"
+            return HttpResponse(json.dumps(mensajes_Error), content_type="application/json")

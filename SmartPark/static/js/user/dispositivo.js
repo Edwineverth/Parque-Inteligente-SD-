@@ -5,9 +5,33 @@ $(function(){
 
 	
 
+	/**$('#frmUsu_save').on("submit",function(){
+		event.preventDefault();
+		//console.log('pasa');
+		$.ajax({
+			type:"POST",
+			url: "/sgcm/cusuario/save/",
+			dataType: 'json',
+			data:$(this).serialize(),
+			success: function(response){
+				$.notify("Guardado Correctamente","success");
+				$('#usu_ced').val("");
+				$('#usu_nom').val("");
+				$('#usu_ape').val("");
+				$('#usu_dir').val("");
+				$('#usu_eml').val("");
+				$('#usu_pas').val("");
+			},
+			error: function(){
+				$.notify("Error","error");
+			}
+		});
 
+	});
 
-	
+	var btnsOpTblModels = "<button style='border: 0; background: transparent' data-target='#modalUsuario' data-toggle='modal' onclick='$.editarModal($(this).parent())'>"+
+							"<img src='/sgcm/static/img/edit.png' title='Editar'>"+
+						  "</button>";*/
 
 	/**$.renderizeRow = function( nRow, aData, iDataIndex )
 	{
@@ -122,39 +146,34 @@ $(function(){
 		var id          = trChildren[0].textContent;
         var nom 		= trChildren[1].textContent;
 		var mac 		= trChildren[2].textContent;
-		var est 		= trChildren[3].textContent;
-		var emp 		= trChildren[4].textContent;
+		var emp 		= trChildren[3].textContent;
 		//var tip_user	= $(td).parent().attr('data-tipcod');
         $('#txtId2').val(id)
 		$('#txtNombre2').val(nom);
 		$('#txtMac2').val(mac);
-		$('#selectEstado2').val(est)
 		$('#selectParque2').val(emp);
 	};
 
 	$('#btnModalActualizar').click(function(){
 		alert("entroUP")
-		//event.preventDefault();
+		event.preventDefault();
 		$.ajax({
-			alert("entroUP2")
+			type: "POST",
 			data: {
 					"id":$('#txtId2').val(),
 					"nombre":$('#txtNombre2').val() , 
 					"mac":$('#txtMax2').val() , 
-					"est":$('#selectEstado2').val(),
 					"parque": $('#selectParque2').val() , 
 					},
-			type: "POST",
-			url: '{% url 'ActualizarDispositivo' %}',
+			url: "administrar/dispositivo/actualizar/",
+			dataType: 'json',
 			success: function(response){
 				$('#myModalEdit').modal('hide');
-				alert("Exito")
-				//$.notify("Dispositivo editado con exito","success");
+				$.notify("Dispositivo editado con exito","success");
 				$('#data-table-simple').DataTable().ajax.reload();
 			},
 			error: function(response){
-				alert("Error")
-				//$.notify("Error al editar","error");
+				$.notify("Error al editar","error");
 			}
 		});
 	});

@@ -28,17 +28,27 @@ class DispositivoSerializer(serializers.ModelSerializer):
 		model = Dispositivo
 		fields = ('id','disp_nombre','disp_mac','disp_estado','parque')
 
+class TipoSensorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = TipoSensor
+		fields = ('id','tip_nombre')
+
 class SensorSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Sensor
 		fields = ('id','sen_nombre','sen_unidadmedida','sen_localizacion','sen_tipo','sen_estado','dispositivo')
+
+class AccionSensorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = AccionSensor
+		fields= ('id','acc_nombre','acc_fecha_hora','acc_atributo','sensor')
 
 class RegistrosSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Registro
 		fields = ('id','reg_fecha_hora','reg_descripcion','reg_usuario','reg_funcion')
 
-class ImagenSerializer(serializers.ModelSerializer):
+class PublicidadSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Imagen
-		fields = ('title','imagen')	
+		model = Publicidad
+		fields = ('pub_title','pub_imagen','parque')	

@@ -31,7 +31,7 @@
                         <div class="switch center">
                           <label>
                             Off
-                            <input type="checkbox" id="switch1" name="switch1" onchange="javascript:showContent(this)">
+                            <input type="checkbox" id="activador1" name="activador1" onchange="javascript:showContent(this)">
                             <span class="lever"></span> On
                           </label>
                         </div>
@@ -43,7 +43,7 @@
                         <div class="switch center">
                           <label>
                             Off
-                            <input type="checkbox" id="switch2" name="switch2" onchange="javascript:showContent(this)">
+                            <input type="checkbox" id="activador2" name="activador2" onchange="javascript:showContent(this)">
                             <span class="lever"></span> On
                           </label>
                         </div>
@@ -58,7 +58,7 @@
                         <div class="switch center">
                           <label>
                             Off
-                            <input type="checkbox" id="switch3" name="switch3" onchange="javascript:showContent(this)">
+                            <input type="checkbox" id="activador3" name="activador3" onchange="javascript:showContent(this)">
                              <span class="lever"></span>On
                           </label>
                         </div>
@@ -69,7 +69,7 @@
                         <div class="switch center">
                           <label>
                             Off
-                            <input type="checkbox" id="switch4" name="switch4" onchange="javascript:showContent(this)">
+                            <input type="checkbox" id="activador4" name="activador4" onchange="javascript:showContent(this)">
                             <span class="lever"></span> On
                           </label>
                         </div>
@@ -82,13 +82,121 @@
               </div>
             </div>
           </section>
+      
+          <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
 
+          <script type="text/javascript">
+              var livingTemp = new Array();
+              var basementTemp = new Array();
+              var socket = io.connect('http://localhost:3000');
+              socket.on('connect', function () {
+                socket.on('mqtt', function (msg) {
+                  var message = msg.topic.split('/');
+                  console.log('topico')
+                  console.log(msg.topic)
+                  var area = message[1];
+                  var state = message[2];
+                  console.log('CONSOLAS')
+                  console.log('MENSAJES')
+                  console.log(msg.topic, msg.payload);
+                  console.log('ESTADO')
+                  console.log(state);
+                  console.log('AREA')
+                  console.log(area);
+                  var timestamp = 1;
+                  console.log(timestamp);
+                  $('#topic').html(msg.topic);
+                  $('#message').html(msg.topic + ', ' + msg.payload);
+                });
+               socket.emit('subscribe', {topic : 'home/#'});
+               socket.emit('subscribe', {topic : 'sensor/luminico'});
+              });
+          </script>
+          
+          <script>
+            $("#activador1").click( function(){
+                if( $(this).is(':checked') ){
+                  console.log('activado');
+                  var datos = {
+                  'valor':'sectorA_1'
+                };
+                }
+                else{
+                  console.log('desactivado')
+                  var datos = {
+                  'valor':'sectorA_0'
+                };
+                }
+                ajax(datos)
+            });
+            $("#activador2").click( function(){
+                if( $(this).is(':checked') ){
+                  console.log('activado');
+                  var datos = {
+                  'valor':'sectorB_1'
+                };
+                }
+                else{
+                  console.log('desactivado')
+                  var datos = {
+                  'valor':'sectorB_0'
+                };
+                }
+                ajax(datos)
+            });
+            $("#activador3").click( function(){
+                if( $(this).is(':checked') ){
+                  console.log('activado');
+                  var datos = {
+                  'valor':'sectorC_1'
+                };
+                }
+                else{
+                  console.log('desactivado')
+                  var datos = {
+                  'valor':'sectorC_0'
+                };
+                }
+                ajax(datos)
+            });
+            $("#activador4").click( function(){
+                if( $(this).is(':checked') ){
+                  console.log('activado');
+                  var datos = {
+                  'valor':'sectorD_1'
+                };
+                }
+                else{
+                  console.log('desactivado')
+                  var datos = {
+                  'valor':'sectorD_0'
+                };
+                }
+                ajax(datos)
+            });
 
-
+            function ajax(datos){
+              $.ajax({
+                beforeSend: function () {
+                  console.log('cargando')
+                },
+                url:'/ajaxLuces/',
+                type:'get',
+                data: {'objetos':JSON.stringify(datos),'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success:function(data){
+                  if(data['result'] == "OK"){
+                        console.log("¡Se ha publicado el mensaje correctamente!")
+                    }else{
+                       console.log("¡Error en la publicacion!")
+                    }
+                }, 
+              });
+            }
+          </script>
           <script >
               function showContent(x) {
                   switch(x){
-                    case switch1:
+                    case activador1:
                       if (x.checked) {
                         Materialize.toast('Se an encendido las luces en el sector 1', 2000, 'rounded')
                         $.get('/modulos/registro/add/',{
@@ -104,7 +212,7 @@
                         });
                       }
                       break;
-                    case switch2:
+                    case activador2:
                       if (x.checked) {
                         Materialize.toast('Se an encendido las luces en el sector 2', 2000, 'rounded')
                         $.get('/modulos/registro/add/',{
@@ -120,7 +228,7 @@
                         });
                       }
                       break;
-                    case switch3:
+                    case activador3:
                       if (x.checked) {
                         Materialize.toast('Se an encendido las luces en el sector 3', 2000, 'rounded')
                         $.get('/modulos/registro/add/',{
@@ -136,7 +244,7 @@
                         });
                       }
                       break;
-                    case switch4:
+                    case activador4:
                       if (x.checked) {
                         Materialize.toast('Se an encendido las luces en el sector 4', 2000, 'rounded')
                         $.get('/modulos/registro/add/',{

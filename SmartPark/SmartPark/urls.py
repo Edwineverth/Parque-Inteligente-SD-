@@ -1,18 +1,3 @@
-"""SmartPark URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url, patterns, include
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
@@ -26,9 +11,11 @@ router = DefaultRouter()
 router.register(r'usuarios', UserViewSet)
 router.register(r'parques', ParqueViewSet)
 router.register(r'dispositivos', DispositivoViewSet)
+router.register(r'tipo_sensores',TipoSensorViewSet)
 router.register(r'sensores', SensorViewSet)
+router.register(r'acciones_sensores', AccionSensorViewSet)
 router.register(r'registros', RegistroViewSet)
-router.register(r'imagenes', ImagenViewSet)
+router.register(r'publicidad', PublicidadViewSet)
 
 urlpatterns = patterns('',
                        #url(r'^registro/$', registrar, name='Registrar'),
@@ -65,12 +52,24 @@ urlpatterns = patterns('',
                        url(r'^administrar/sensores/nuevo/$', nuevoSensor, name='NuevoSensor'),
                        url(r'^administrar/sensores/$', admSensores, name='AdmSensores'),
                        
+                       
+                       url(r'^administrar/tiposensores/actualizar/(?P<pk>\d+)/$', editar_tiposensor.as_view(), name='EditarTipoSensor'),
+                       url(r'^administrar/tiposensores/nuevo/$', nuevoTipoSensor, name='NuevoTipoSensor'),
+                       url(r'^administrar/tiposensores/$', admTipoSensores, name='AdmTipoSensores'),
+                       
+                       url(r'^administrar/topicos/eliminar/(?P<id>\d+)/$', eliminar_topico, name='EliminarTopico'),
+                       url(r'^administrar/topicos/actualizar/(?P<pk>\d+)/$', editar_topico.as_view(), name='EditarTopico'),
+                       url(r'^administrar/topicos/nuevo/$', nuevoTopico, name='NuevoTopico'),
+                       url(r'^administrar/topicos/$', admTopicos, name='AdmTopicos'),
+
                        url(r'^administrar/dispositivo/nuevo/', nuevoDispositivo, name='NuevoDispositivo'),
                        url(r'^administrar/dispositivo/actualizar/(?P<pk>\d+)/$', editar_dispositivo.as_view(), name='ActualizarDispositivo'),
                        url(r'^administrar/dispositivo/activar/(?P<id>\d+)/$', activar_dispositivo, name='ActivarDispositivo'),
                        url(r'^administrar/dispositivo/desactivar/(?P<id>\d+)/$', desactivar_dispositivo, name='DesactivarDispositivo'),
                        url(r'^administrar/dispositivo/$', admDispositivos, name='AdmDispositivos'),
                        
+                      url(r'^ajaxLuces/$', mqttluces.as_view(),name='ajaxLuces'),  
+
                        url(r'^crearUsuario/$', crear_usuario.as_view(), name='CrearUsuario1'),
                        url(r'^principal/$', principal, name='Principal'),
                        url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='Logout'),

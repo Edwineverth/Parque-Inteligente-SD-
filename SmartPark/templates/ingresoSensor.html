@@ -39,19 +39,19 @@
                                             {{ form.sen_unidadmedida }}
                                             <label>Localizacion</label>
                                             {{ form.sen_localizacion }}
-                                            <label>Tipo</label>
-                                            {{ form.sen_tipo }}
                                             <div hidden="hidden">
                                                 <label>Estado</label>
                                                 {{ form.sen_estado }}
                                             </div>
-                                            <label>Dispositivo</label>
-                                            {{ form.dispositivo }}
-                                            <div hidden="hidden">
-                                                <label>Funcion</label>
-                                                {{ form.sen_funcion }}
+                                            <div>
+                                                <label>Tipo Sensor</label>
+                                                {{ form.tipo }}
                                             </div>
-                                            
+                                            <div>
+                                                <label>Dispositivo</label>
+                                                {{ form.dispositivo_label }}
+                                                {{ form.dispositivo }}
+                                            </div>
                                             <button type="submit" name="submit" class="btn cyan waves-effect waves-light right" value="Agregar Dispositivo">
                                                 AGREGAR
                                             </button>

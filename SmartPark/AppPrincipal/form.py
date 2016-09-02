@@ -40,18 +40,23 @@ class DispositivoForm(forms.ModelForm):
       model = Dispositivo
       fields ='__all__'
 
-class DispositivoEditForm(forms.ModelForm):
-  disp_nombre=forms.CharField(max_length=50)
-  disp_mac=forms.CharField(max_length=17)
-  parque = forms.ModelChoiceField(queryset=Parque.objects.all())
-  
+class TopicoForm(forms.ModelForm):
+  class Meta:
+    model = Topico
+    fields = '__all__'
+
+class TipoSensorForm(forms.ModelForm):
+  class Meta:
+    model = TipoSensor
+    fields = '__all__'
 
 class SensorForm(forms.ModelForm):
    class Meta:
       model = Sensor
       fields ='__all__'
 
-class ImagenForm(forms.ModelForm):
+
+class PublicidadForm(forms.ModelForm):
   class Meta:
-    model = Imagen
+    model = Publicidad
     fields = '__all__'
