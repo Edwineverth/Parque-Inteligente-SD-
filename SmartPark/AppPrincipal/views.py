@@ -80,7 +80,7 @@ def sonido(request):
 
 @login_required(login_url='/')
 def pantalla(request):
-    imagenes = Imagen.objects.all()
+    imagenes = Publicidad.objects.all()
     return render_to_response('pantalla.html', {'imagenes':imagenes}, context_instance=RequestContext(request))
 
 @login_required(login_url='/')

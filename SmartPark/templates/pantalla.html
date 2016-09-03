@@ -44,20 +44,23 @@
                           <tr>
                               <th class="center-align">Titulo</th>
                               <th class="center-align">Imagen</th>
+                              <th class="center-align">Parque</th>
                           </tr>
                       </thead>
                       <tfoot>
                           <tr>
                               <th class="center-align">Titulo</th>
                               <th class="center-align">Imagen</th>
+                              <th class="center-align">Parque</th>
                               
                            </tr>
                       </tfoot>
                         <tbody>
                             {% for img in imagenes %}
                                 <tr>
-                                  <td class="center-align">{{ img.title }}</td>
-                                  <td class="center-align"><img src="/media/{{ img.imagen }}" style="width:25%;height:25%;"></td>
+                                  <td class="center-align">{{ img.pub_title }}</td>
+                                  <td class="center-align"><img src="/media/{{ img.pub_imagen }}" style="width:25%;height:25%;"></td>
+                                  <td class="center-align">{{ img.parque }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

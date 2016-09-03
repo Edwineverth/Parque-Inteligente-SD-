@@ -51,4 +51,4 @@ class RegistrosSerializer(serializers.ModelSerializer):
 class PublicidadSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Publicidad
-		fields = ('pub_title','pub_imagen','parque')	
+		fields = ('id','pub_title','pub_imagen','parque')	
